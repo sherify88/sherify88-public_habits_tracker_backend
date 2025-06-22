@@ -2,6 +2,12 @@
 
 A robust NestJS backend for tracking daily habits with authentication, streak tracking, and flexible storage options. Perfect for personal habit tracking applications.
 
+### GitHub Repository
+[https://github.com/sherify88/sherify88-public_habits_tracker_backend]
+
+### Production API
+[https://api.habits.awesome-posts.com/]
+
 ## 🚀 Features
 
 - **Habit Management**: Create, read, update, and delete habits
@@ -12,10 +18,6 @@ A robust NestJS backend for tracking daily habits with authentication, streak tr
 - **Docker Ready**: Easy deployment with Docker and Docker Compose
 - **AWS Lambda Ready**: Serverless deployment with SAM
 - **Comprehensive Testing**: Unit and end-to-end tests
-
-## 🌐 API Endpoints
-
-**Production API**: https://api.habits.awesome-posts.com/
 
 ## 📚 API Documentation
 
@@ -51,7 +53,7 @@ The collection includes these variables:
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/sherify88/sherify88-public_habits_tracker_backend
 cd habits_tracker_backend
 
 # Start with Docker Compose
@@ -264,22 +266,22 @@ npm run start:prod
 ### Common Issues
 
 1. **Port 3000 already in use**
-   ```bash
-   # Change port in docker-compose.yml
-   ports:
-     - "3001:3000"
-   ```
+    ```bash
+    # Change port in docker-compose.yml
+    ports:
+      - "3001:3000"
+    ```
 
 2. **JWT token expired**
-   - Re-login to get a new token
+    - Re-login to get a new token
 
 3. **Data not persisting**
-   - Check if `USE_FILE_STORAGE=true` is set
-   - Ensure `habits.json` file exists and is writable
+    - Check if `USE_FILE_STORAGE=true` is set
+    - Ensure `habits.json` file exists and is writable
 
 4. **SAM local not working**
-   - Ensure AWS SAM CLI is installed
-   - Check AWS credentials are configured
+    - Ensure AWS SAM CLI is installed
+    - Check AWS credentials are configured
 
 ### Logs
 ```bash
@@ -293,6 +295,4 @@ npm run start:dev
 npm run sam:local
 ```
 
-
-
-**Happy Habit Tracking! 🎯** 
+**Happy Habit Tracking! 🎯**
