@@ -19,7 +19,7 @@ import { AllowGuest } from './allow-guest.decorator';
 @Controller('auth')
 @SerializeOptions({ strategy: 'excludeAll' })
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
   @ApiBody({ type: LoginUserDto })
   @HttpCode(200)
   @AllowGuest()
@@ -34,7 +34,10 @@ export class AuthController {
   @Get()
   authenticate(@Req() request: IRequestWithUser) {
     const user = request.user;
-   // user.password = undefined;
-    return user;
+    return {
+      id: user.id,
+      username: user.username,
+      isActive: user.isActive
+    };
   }
 }

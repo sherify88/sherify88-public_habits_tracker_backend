@@ -15,11 +15,9 @@ import { HabitsService } from './habits.service';
 import { CreateHabitDto } from './dto/create-habit.dto';
 import { UpdateHabitDto } from './dto/update-habit.dto';
 import { ToggleHabitDto } from './dto/toggle-habit.dto';
-import { AllowGuest } from 'src/auth/allow-guest.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
-
-
-@AllowGuest()
+@ApiBearerAuth()
 @Controller('habits')
 export class HabitsController {
     private readonly logger = new Logger(HabitsController.name);

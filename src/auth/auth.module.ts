@@ -7,6 +7,8 @@ import { AuthController } from './auth.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
+import { SecretsModule } from './secrets.module';
+import { SecretsService } from './secrets.service';
 import JwtAuthGuard from './jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 
@@ -15,21 +17,39 @@ import { APP_GUARD } from '@nestjs/core';
 		forwardRef(() => UsersModule),
 		PassportModule,
 		ConfigModule,
+		SecretsModule,
 		JwtModule.registerAsync({
-			imports: [ConfigModule],
-			inject: [ConfigService],
-			useFactory: async (configService: ConfigService) => ({
-				secret: configService.get('JWT_SECRET'),
-				signOptions: {
-					expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s`
+			imports: [ConfigModule, SecretsModule],
+			inject: [ConfigService, SecretsService],
+			useFactory: async (
+				configService: ConfigService,
+				secretsService: SecretsService,
+			) => {
+				let jwtSecret: string;
+				const secretName = process.env.JWT_SECRET_NAME;
+
+				if (secretName) {
+					// In AWS environment, fetch from Secrets Manager
+					jwtSecret = await secretsService.getSecret(secretName);
+				} else {
+					// Fallback for local development
+					jwtSecret = configService.get<string>('JWT_SECRET', 'default_fallback_secret_for_local_dev');
 				}
-			})
+
+				return {
+					secret: jwtSecret,
+					signOptions: {
+						expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s`
+					}
+				};
+			}
 		})
 	],
 	providers: [
 		AuthService,
 		LocalStrategy,
-		JwtStrategy
+		JwtStrategy,
+		SecretsService
 	],
 	controllers: [AuthController],
 	exports: [AuthService]

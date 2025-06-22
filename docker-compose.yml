@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  habits-tracker:
+    build:
+      context: .
+      target: development
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - USE_FILE_STORAGE=true
+      - JWT_SECRET=your-super-secret-jwt-key-change-this
+      - JWT_EXPIRATION_TIME=3600
+      - WEB_VERSION=1.0.0
+    volumes:
+      - ./habits.json:/app/habits.json
+      - ./src:/app/src
+    restart: unless-stopped
+
+

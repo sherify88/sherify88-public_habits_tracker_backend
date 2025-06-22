@@ -1,185 +1,200 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 # Habits Tracker Backend
 
-A NestJS-based REST API for tracking daily habits with streak counting and completion history.
+A robust NestJS backend for tracking daily habits with authentication, streak tracking, and flexible storage options. Perfect for personal habit tracking applications.
 
-## Features
+## 🚀 Features
 
-- ✅ **CRUD Operations**: Create, read, update, and delete habits
-- ✅ **Daily Completion Tracking**: Mark habits as completed for the current date only
-- ✅ **Streak Counter**: Track consecutive days of habit completion
-- ✅ **Repository Pattern**: Clean separation of data access from business logic
-- ✅ **Multiple Storage Options**: In-memory storage or file-based JSON storage
-- ✅ **RESTful API**: Clean, RESTful endpoints following best practices
-- ✅ **Validation**: Input validation using class-validator
-- ✅ **Error Handling**: Proper HTTP status codes and error messages
-- ✅ **Statistics**: Get habit statistics and completion metrics
+- **Habit Management**: Create, read, update, and delete habits
+- **Daily Toggle**: Mark habits as completed for any day
+- **Streak Tracking**: Automatic calculation of current and longest streaks
+- **Authentication**: JWT-based authentication system
+- **Flexible Storage**: Support for in-memory, file-based, and S3 storage
+- **Docker Ready**: Easy deployment with Docker and Docker Compose
+- **AWS Lambda Ready**: Serverless deployment with SAM
+- **Comprehensive Testing**: Unit and end-to-end tests
 
-## API Endpoints
+## 🌐 API Endpoints
 
-### Habits Management
+**Production API**: https://api.habits.awesome-posts.com/
+
+## 📚 API Documentation
+
+### Postman Collection
+We provide a complete Postman collection with all API endpoints, authentication, and examples:
+
+**File**: `Habits Tracker API.postman_collection.json`
+
+#### How to Import:
+1. Download the `Habits Tracker API.postman_collection.json` file
+2. Open Postman
+3. Click **Import** → **Upload Files**
+4. Select the collection file
+5. The collection will be imported with all endpoints and environment variables
+
+#### Features:
+- ✅ **Auto-authentication**: JWT token automatically set after login
+- ✅ **Environment variables**: Easy switching between local and production
+- ✅ **Complete examples**: All endpoints with sample requests and responses
+- ✅ **Pre-configured**: Ready to use with default credentials
+
+#### Environment Setup:
+The collection includes these variables:
+- `base_url_local`: `http://localhost:3000`
+- `base_url_production`: `https://api.habits.awesome-posts.com`
+- `username`: `testuser`
+- `password`: `password123`
+- `token`: Auto-populated after login
+
+## 🛠️ Quick Start
+
+### Option 1: Docker (Recommended for Development)
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd habits_tracker_backend
+
+# Start with Docker Compose
+docker-compose up
+```
+
+That's it! The app will be running at `http://localhost:3000`
+
+### Option 2: Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Create environment file
+cp .env.example .env
+
+# Start development server
+npm run start:dev
+```
+
+### Option 3: Local AWS Lambda Testing
+
+```bash
+# Test Lambda function locally with SAM
+npm run sam:local
+```
+
+## 🔐 Authentication
+
+**Default User Credentials:**
+- Username: `testuser`
+- Password: `password123`
+
+### Get JWT Token
+```bash
+# Local development
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "testuser", "password": "password123"}'
+
+# Production
+curl -X POST https://api.habits.awesome-posts.com/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "testuser", "password": "password123"}'
+```
+
+## 📡 API Endpoints
+
+### Authentication
+- `POST /auth/login` - Login and get JWT token
+
+### Habits
 - `GET /habits` - Get all habits
 - `POST /habits` - Create a new habit
 - `GET /habits/:id` - Get a specific habit
-- `PATCH /habits/:id` - Update a habit
 - `DELETE /habits/:id` - Delete a habit
+- `PATCH /habits/:id/toggle` - Toggle habit completion
 
-### Habit Completion
-- `PATCH /habits/:id/toggle` - Toggle habit completion for today
+### Version
+- `GET /version/api` - Get API version
+- `GET /version/web` - Get web version
 
-### Statistics & Analytics
-- `GET /habits/stats` - Get habit statistics
-- `GET /habits/streaks` - Get habits with current streaks
-
-## Setup Instructions
-
-### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
-- PostgreSQL (optional, only if using database storage)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd habits_tracker_backend
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Environment Configuration**
-   Create a `.env` file in the root directory:
-   ```env
-   # Storage Configuration (Choose one)
-   USE_FILE_STORAGE=false  # Set to 'true' for file-based storage
-   USE_DATABASE=false      # Set to 'true' if you want to use PostgreSQL
-
-   # Database Configuration (Only needed if USE_DATABASE=true)
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_USER=your_username
-   DB_PWD=your_password
-   DB_NAME=habits_tracker
-
-   # Server Configuration
-   NODE_ENV=dev
-   SERVER_TYPE=dev
-   ```
-
-4. **Run the application**
-   ```bash
-   # Development mode
-   npm run start:dev
-
-   # Production mode
-   npm run build
-   npm run start:prod
-   ```
-
-## Storage Options
-
-### In-Memory Storage (Default)
-- Data is stored in memory during runtime
-- Data is lost when the application restarts
-- Perfect for development and testing
-- Set `USE_FILE_STORAGE=false` and `USE_DATABASE=false` in `.env`
-
-### File-Based Storage
-- Data is persisted to `habits.json` file
-- Data survives application restarts
-- Good for simple deployments
-- Set `USE_FILE_STORAGE=true` and `USE_DATABASE=false` in `.env`
-
-### Database Storage (Optional)
-- Uses PostgreSQL for persistent storage
-- Requires database setup and configuration
-- Set `USE_DATABASE=true` and configure database connection in `.env`
-
-## API Examples
+## 📝 API Examples
 
 ### Create a Habit
 ```bash
+# Local development
 curl -X POST http://localhost:3000/habits \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "title": "Morning Exercise",
-    "description": "30 minutes of cardio"
+    "name": "Daily Exercise",
+    "description": "30 minutes of physical activity"
   }'
-```
 
-### Get All Habits
-```bash
-curl http://localhost:3000/habits
+# Production
+curl -X POST https://api.habits.awesome-posts.com/habits \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Daily Exercise",
+    "description": "30 minutes of physical activity"
+  }'
 ```
 
 ### Toggle Habit Completion
 ```bash
-curl -X PATCH http://localhost:3000/habits/1/toggle
+# Local development
+curl -X PATCH http://localhost:3000/habits/1/toggle \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"completed": true}'
+
+# Production
+curl -X PATCH https://api.habits.awesome-posts.com/habits/1/toggle \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"completed": true}'
 ```
 
-### Get Habit Statistics
+### Get All Habits
 ```bash
-curl http://localhost:3000/habits/stats
+# Local development
+curl -X GET http://localhost:3000/habits \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Production
+curl -X GET https://api.habits.awesome-posts.com/habits \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
-## Architecture
+## 🔧 Configuration
 
-### Repository Pattern
-The application uses the Repository pattern to separate data access from business logic:
+### Environment Variables
 
-- **IHabitRepository Interface**: Defines the contract for data operations
-- **InMemoryHabitRepository**: In-memory implementation for development
-- **FileHabitRepository**: File-based implementation for persistence
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `USE_FILE_STORAGE` | Use file-based storage | `false` | No |
+| `JWT_SECRET` | JWT signing secret | - | Yes |
+| `JWT_EXPIRATION_TIME` | JWT token expiration (seconds) | `3600` | Yes |
+| `WEB_VERSION` | Web application version | `1.0.0` | No |
 
-### Dependency Injection
-The appropriate repository is injected based on the `USE_FILE_STORAGE` environment variable, allowing easy switching between storage strategies.
+### Storage Options
 
-### Module Structure
+1. **In-Memory** (Default): Fast, data lost on restart
+2. **File Storage**: Data saved to `habits.json`
+3. **S3 Storage**: Cloud storage for production
+
+## 🐳 Docker Commands
+
+```bash
+# Development
+docker-compose up
+
+# Production build
+docker build --target production -t habits-tracker:prod .
+
+# Run production container
+docker run -p 3000:3000 habits-tracker:prod
 ```
-src/habits/
-├── entities/
-│   └── habit.entity.ts
-├── dto/
-│   ├── create-habit.dto.ts
-│   └── update-habit.dto.ts
-├── interfaces/
-│   └── habit-repository.interface.ts
-├── repositories/
-│   ├── in-memory-habit.repository.ts
-│   └── file-habit.repository.ts
-├── habits.controller.ts
-├── habits.service.ts
-└── habits.module.ts
-```
 
-## Testing
+## 🧪 Testing
 
 ```bash
 # Unit tests
@@ -192,66 +207,92 @@ npm run test:e2e
 npm run test:cov
 ```
 
-## Deployment
+## 📊 Data Structure
 
-### Local Development
-```bash
-npm run start:dev
+### Habit Object
+```json
+{
+  "id": 1,
+  "name": "Daily Exercise",
+  "description": "30 minutes of physical activity",
+  "currentStreak": 5,
+  "longestStreak": 10,
+  "totalCompletions": 25,
+  "isCompletedToday": true,
+  "lastCompletedAt": "2024-01-15T10:30:00.000Z",
+  "createdDate": "2024-01-01T00:00:00.000Z",
+  "updatedDate": "2024-01-15T10:30:00.000Z"
+}
 ```
 
-### Production
+## 🚀 Deployment
+
+### Production Deployment (AWS Lambda)
+```bash
+# Deploy to production
+npm run deploy:prod
+```
+
+### Development Deployment
+```bash
+# Deploy to development environment
+npm run deploy:dev
+
+# Deploy to staging environment
+npm run deploy:stage
+```
+
+### Local Lambda Testing
+```bash
+# Test Lambda function locally
+npm run sam:local
+```
+
+### Docker Compose
+```bash
+docker-compose up -d
+```
+
+### Manual Deployment
 ```bash
 npm run build
 npm run start:prod
 ```
 
-### Environment Variables for Production
-- Set `NODE_ENV=production`
-- Choose storage strategy: `USE_FILE_STORAGE=true` for file persistence
-- Optionally set `USE_DATABASE=true` for PostgreSQL
+## 🔍 Troubleshooting
 
-## What Was Completed
+### Common Issues
 
-✅ **Core Requirements**
-- REST API endpoints (GET, POST, PATCH, DELETE)
-- Async/await implementation
-- Clean controller/service structure
-- Daily completion tracking
-- Repository pattern with dependency injection
-- In-memory and file-based storage options
+1. **Port 3000 already in use**
+   ```bash
+   # Change port in docker-compose.yml
+   ports:
+     - "3001:3000"
+   ```
 
-✅ **Bonus Features**
-- Streak counter implementation
-- Habit completion history
-- Statistics endpoint
-- Comprehensive error handling
-- Input validation
-- Clean architecture following NestJS best practices
+2. **JWT token expired**
+   - Re-login to get a new token
 
-## What Was Skipped
+3. **Data not persisting**
+   - Check if `USE_FILE_STORAGE=true` is set
+   - Ensure `habits.json` file exists and is writable
 
-❌ **Authentication**: Mock authentication was not implemented as the existing auth system is already in place
-❌ **CI/CD**: GitHub Actions workflow was not added
-❌ **Deployment**: Live deployment link was not created
+4. **SAM local not working**
+   - Ensure AWS SAM CLI is installed
+   - Check AWS credentials are configured
 
-## Contributing
+### Logs
+```bash
+# Docker logs
+docker-compose logs -f
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+# Application logs
+npm run start:dev
 
-## License
+# SAM local logs
+npm run sam:local
+```
 
-This project is licensed under the MIT License.
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+**Happy Habit Tracking! 🎯** 

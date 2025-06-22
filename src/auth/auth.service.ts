@@ -1,11 +1,12 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-var bcrypt = require("bcryptjs");
+import * as bcrypt from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity';
 import { ITokenPayload } from 'src/utils/interfaces';
 import { BadRequest } from 'src/utils/enums';
+
 @Injectable()
 export class AuthService {
 	constructor(
@@ -15,39 +16,43 @@ export class AuthService {
 		private readonly configService: ConfigService
 	) { }
 
-	public async validateUser(phone: string, plainTextPassword: string) {
-
+	public async validateUser(username: string, plainTextPassword: string): Promise<User | null> {
 		try {
-			// const user = await this.usersService.findOptions({ isPaginate: false, options: null, FindOptionsWhere: ([{ phone, isDisabled: false, }]), relations: { manager: true, district: true,role:true }, throwException: false, loadEagerRelations: false, loadRelationIds: false, select: { district: { id: true,area_e_nam:true, nameAr: true } } });
+			const user = await this.usersService.findByUsername(username);
 
-			// await this.verifyPassword(plainTextPassword, user.password);
-			let user;
+			if (!user || !user.isActive) {
+				return null;
+			}
+
+			const isPasswordValid = this.verifyPassword(plainTextPassword, user.password);
+			if (!isPasswordValid) {
+				return null;
+			}
+
 			return user;
-
-
-
-
-
 		} catch (error) {
-			throw BadRequest.INVALID_LOGIN();
+			return null;
 		}
 	}
 
-	private async verifyPassword(plainTextPassword: string, hashedPassword: string) {
-		const isPasswordMatching = await bcrypt.compareSync(plainTextPassword, hashedPassword);
-		if (!isPasswordMatching) {
-			throw BadRequest.INVALID_LOGIN();
-		}
+	private verifyPassword(plainTextPassword: string, hashedPassword: string): boolean {
+		return  bcrypt.compareSync(plainTextPassword, hashedPassword);
 	}
 
 	async login(user: User) {
 		const payload: ITokenPayload = {
-		
+			sub: user.id,
+			username: user.username
 		};
 
 		return {
-			...payload,
+			id: user.id,
+			username: user.username,
 			access_token: this.jwtService.sign(payload)
 		};
+	}
+
+	async validateTokenPayload(payload: ITokenPayload): Promise<User | null> {
+		return this.usersService.findById(payload.sub);
 	}
 }

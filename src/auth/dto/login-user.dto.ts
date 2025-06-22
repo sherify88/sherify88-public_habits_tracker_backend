@@ -1,11 +1,12 @@
-import { IsEmail, IsNotEmpty } from "@nestjs/class-validator";
+import { IsString, IsNotEmpty } from "class-validator";
 
 export class LoginUserDto {
   @IsNotEmpty()
-  @IsEmail()
-  readonly email: string;
+  @IsString()
+  readonly username: string;
 
   @IsNotEmpty()
+  @IsString()
   readonly password: string;
 }
 

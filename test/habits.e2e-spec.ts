@@ -3,15 +3,16 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { CreateHabitDto } from '../src/habits/dto/create-habit.dto';
+import { setupTestEnvironment, cleanupTestEnvironment, TEST_USER } from './test-setup';
 
 describe('HabitsController (e2e)', () => {
     let app: INestApplication;
     let habitId: number;
+    let authToken: string;
 
     beforeAll(async () => {
-        // Force in-memory repository for e2e tests
-        process.env.USE_FILE_STORAGE = 'false';
-        process.env.USE_DATABASE = 'false';
+        // Setup test environment
+        setupTestEnvironment();
 
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
@@ -20,9 +21,18 @@ describe('HabitsController (e2e)', () => {
         app = moduleFixture.createNestApplication();
         app.useGlobalPipes(new ValidationPipe()); // Ensure validation pipe is used
         await app.init();
+
+        // Login to get authentication token
+        const loginResponse = await request(app.getHttpServer())
+            .post('/auth/login')
+            .send(TEST_USER);
+
+        authToken = loginResponse.body.access_token;
     });
 
     afterAll(async () => {
+        // Clean up test environment
+        cleanupTestEnvironment();
         await app.close();
     });
 
@@ -34,6 +44,7 @@ describe('HabitsController (e2e)', () => {
         it('GET /habits -> should return an empty array initially', () => {
             return request(app.getHttpServer())
                 .get('/habits')
+                .set('Authorization', `Bearer ${authToken}`)
                 .expect(200)
                 .expect([]);
         });
@@ -46,6 +57,7 @@ describe('HabitsController (e2e)', () => {
 
             return request(app.getHttpServer())
                 .post('/habits')
+                .set('Authorization', `Bearer ${authToken}`)
                 .send(createHabitDto)
                 .expect(201)
                 .then((res) => {
@@ -71,6 +83,7 @@ describe('HabitsController (e2e)', () => {
         it('POST /habits -> should fail with invalid data', () => {
             return request(app.getHttpServer())
                 .post('/habits')
+                .set('Authorization', `Bearer ${authToken}`)
                 .send({ description: 'Missing name' }) // Invalid DTO
                 .expect(400);
         });
@@ -83,6 +96,7 @@ describe('HabitsController (e2e)', () => {
 
             return request(app.getHttpServer())
                 .post('/habits')
+                .set('Authorization', `Bearer ${authToken}`)
                 .send(createHabitDto)
                 .expect(409) // Conflict
                 .then((res) => {
@@ -93,6 +107,7 @@ describe('HabitsController (e2e)', () => {
         it('GET /habits -> should return an array with the newly created habit', async () => {
             const response = await request(app.getHttpServer())
                 .get('/habits')
+                .set('Authorization', `Bearer ${authToken}`)
                 .expect(200);
 
             expect(response.body).toHaveLength(1);
@@ -102,6 +117,7 @@ describe('HabitsController (e2e)', () => {
         it('GET /habits/:id -> should return the specific habit', () => {
             return request(app.getHttpServer())
                 .get(`/habits/${habitId}`)
+                .set('Authorization', `Bearer ${authToken}`)
                 .expect(200)
                 .then((res) => {
                     expect(res.body.id).toBe(habitId);
@@ -112,6 +128,7 @@ describe('HabitsController (e2e)', () => {
         it('PATCH /habits/:id/toggle -> should mark habit as complete', async () => {
             const response = await request(app.getHttpServer())
                 .patch(`/habits/${habitId}/toggle`)
+                .set('Authorization', `Bearer ${authToken}`)
                 .send({ completed: true })
                 .expect(200);
 
@@ -124,6 +141,7 @@ describe('HabitsController (e2e)', () => {
         it('PATCH /habits/:id/toggle -> should mark habit as not complete', async () => {
             const response = await request(app.getHttpServer())
                 .patch(`/habits/${habitId}/toggle`)
+                .set('Authorization', `Bearer ${authToken}`)
                 .send({ completed: false })
                 .expect(200);
 
@@ -137,6 +155,7 @@ describe('HabitsController (e2e)', () => {
             const updatedData = { name: 'Updated E2E Habit' };
             const response = await request(app.getHttpServer())
                 .patch(`/habits/${habitId}`)
+                .set('Authorization', `Bearer ${authToken}`)
                 .send(updatedData)
                 .expect(200);
 
@@ -148,6 +167,7 @@ describe('HabitsController (e2e)', () => {
             const secondHabitDto: CreateHabitDto = { name: 'Second E2E Habit' };
             const res = await request(app.getHttpServer())
                 .post('/habits')
+                .set('Authorization', `Bearer ${authToken}`)
                 .send(secondHabitDto)
                 .expect(201);
 
@@ -157,30 +177,35 @@ describe('HabitsController (e2e)', () => {
             const updateToDuplicate = { name: 'Second E2E Habit' };
             await request(app.getHttpServer())
                 .patch(`/habits/${habitId}`)
+                .set('Authorization', `Bearer ${authToken}`)
                 .send(updateToDuplicate)
                 .expect(409); // Conflict
 
             // Clean up the second habit to not interfere with other tests
             await request(app.getHttpServer())
                 .delete(`/habits/${secondHabitId}`)
+                .set('Authorization', `Bearer ${authToken}`)
                 .expect(204);
         });
 
         it('DELETE /habits/:id -> should delete the habit', () => {
             return request(app.getHttpServer())
                 .delete(`/habits/${habitId}`)
+                .set('Authorization', `Bearer ${authToken}`)
                 .expect(204);
         });
 
         it('GET /habits/:id -> should return 404 after deletion', () => {
             return request(app.getHttpServer())
                 .get(`/habits/${habitId}`)
+                .set('Authorization', `Bearer ${authToken}`)
                 .expect(404);
         });
 
         it('GET /habits -> should return an empty array after deletion', () => {
             return request(app.getHttpServer())
                 .get('/habits')
+                .set('Authorization', `Bearer ${authToken}`)
                 .expect(200)
                 .expect([]);
         });
@@ -188,6 +213,7 @@ describe('HabitsController (e2e)', () => {
         it('GET /habits/stats -> should return stats', () => {
             return request(app.getHttpServer())
                 .get('/habits/stats')
+                .set('Authorization', `Bearer ${authToken}`)
                 .expect(200)
                 .then((res) => {
                     expect(res.body).toEqual({
@@ -197,6 +223,20 @@ describe('HabitsController (e2e)', () => {
                         averageStreak: expect.any(Number),
                     });
                 });
+        });
+
+        // Test authentication requirements
+        it('should reject requests without authentication token', () => {
+            return request(app.getHttpServer())
+                .get('/habits')
+                .expect(401);
+        });
+
+        it('should reject requests with invalid authentication token', () => {
+            return request(app.getHttpServer())
+                .get('/habits')
+                .set('Authorization', 'Bearer invalid.token')
+                .expect(401);
         });
     });
 }); 

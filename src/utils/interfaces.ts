@@ -1,8 +1,5 @@
 import { Request } from 'express';
 import { User } from '../users/entities/user.entity';
-import { BaseEntity, EntityManager, EntityMetadata, FindOptionsOrder, FindOptionsRelations, FindOptionsSelect, FindOptionsWhere } from 'typeorm';
-import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
-import { Shift_ar } from './enums';
 
 export interface IRequestWithUser extends Request {
   user: User;
@@ -13,7 +10,10 @@ export enum Roles_En {
 
 
 export interface ITokenPayload {
-  id?: string;
+  sub: number; // User ID
+  username: string;
+  iat?: number; // Issued at
+  exp?: number; // Expiration time
 }
 
 export class IUploadedFile {

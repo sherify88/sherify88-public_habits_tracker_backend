@@ -11,11 +11,11 @@ import { HabitsModule } from './habits/habits.module';
 import { APP_GUARD } from '@nestjs/core';
 import JwtAuthGuard from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
+import { VersionController } from './version.controller';
 
 @Module({
 	imports: [
-		ConfigModule.forRoot({isGlobal:true}),
-		//TypeOrmModule.forRoot(pgConfig), 
+		ConfigModule.forRoot({ isGlobal: true }),
 		DatabaseModule,
 		ScheduleModule.forRoot(),
 		MulterModule.register({
@@ -25,7 +25,7 @@ import { RolesGuard } from './auth/roles.guard';
 		UsersModule,
 		HabitsModule,
 	],
-	controllers: [AppController],
+	controllers: [AppController, VersionController],
 	providers: [AppService,
 		{
 			provide: APP_GUARD,
