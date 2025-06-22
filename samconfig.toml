@@ -1,0 +1,79 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "habits-tracker-backend"
+s3_bucket = "REDACTED-BUCKET-NAME"
+s3_prefix = "habits-tracker-backend"
+region = "eu-central-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Environment=dev"
+image_repositories = []
+
+[default.build]
+[default.build.parameters]
+use_container = true
+cached = true
+parallel = true
+
+[default.local_start_api]
+[default.local_start_api.parameters]
+warm_containers = "EAGER"
+
+[default.local_start_lambda]
+[default.local_start_lambda.parameters]
+warm_containers = "EAGER"
+
+[dev]
+[dev.deploy]
+[dev.deploy.parameters]
+stack_name = "habits-tracker-backend-dev"
+s3_bucket = "REDACTED-BUCKET-NAME"
+s3_prefix = "habits-tracker-backend-dev"
+region = "eu-central-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Environment=dev"
+image_repositories = []
+
+[dev.build]
+[dev.build.parameters]
+use_container = true
+cached = true
+parallel = true
+
+[stage]
+[stage.deploy]
+[stage.deploy.parameters]
+stack_name = "habits-tracker-backend-stage"
+s3_bucket = "REDACTED-BUCKET-NAME"
+s3_prefix = "habits-tracker-backend-stage"
+region = "eu-central-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Environment=stage"
+image_repositories = []
+
+[stage.build]
+[stage.build.parameters]
+use_container = true
+cached = true
+parallel = true
+
+[prod]
+[prod.deploy]
+[prod.deploy.parameters]
+stack_name = "habits-tracker-backend-prod"
+region = "eu-central-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Environment=\"prod\""
+image_repositories = []
+resolve_s3 = true
+
+[prod.build]
+[prod.build.parameters]
+use_container = true
+cached = true
+parallel = true 

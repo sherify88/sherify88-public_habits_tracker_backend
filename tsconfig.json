@@ -18,11 +18,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "lib": [
-      "ES2019.Object", "es2019",
+      "ES2019.Object",
+      "es2019",
       "ES2017"
     ],
     "resolveJsonModule": true,
     "allowJs": true,
-    
   }
 }

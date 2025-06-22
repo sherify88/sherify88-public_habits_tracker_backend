@@ -1,0 +1,31 @@
+{
+    "httpMethod": "GET",
+    "path": "/habits",
+    "headers": {},
+    "queryStringParameters": {},
+    "body": null,
+    "isBase64Encoded": false,
+    "requestContext": {
+        "authorizer": null,
+        "accountId": "123456789012",
+        "resourceId": "123456",
+        "stage": "dev",
+        "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+        "identity": {
+            "cognitoIdentityPoolId": null,
+            "accountId": null,
+            "cognitoIdentityId": null,
+            "caller": null,
+            "apiKey": null,
+            "sourceIp": "127.0.0.1",
+            "cognitoAuthenticationType": null,
+            "cognitoAuthenticationProvider": null,
+            "userArn": null,
+            "userAgent": "Custom User Agent String",
+            "user": null
+        },
+        "resourcePath": "/{proxy+}",
+        "httpMethod": "GET",
+        "apiId": "1234567890"
+    }
+}
