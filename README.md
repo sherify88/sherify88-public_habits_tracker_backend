@@ -3,10 +3,10 @@
 A robust NestJS backend for tracking daily habits with authentication, streak tracking, and flexible storage options. Perfect for personal habit tracking applications.
 
 ### GitHub Repository
-[https://github.com/sherify88/sherify88-public_habits_tracker_backend]
+[https://github.com/sherify88/sherify88-public_habits_tracker_backend](https://github.com/sherify88/sherify88-public_habits_tracker_backend)
 
 ### Production API
-[https://api.habits.awesome-posts.com/]
+[https://api.habits.awesome-posts.com/](https://api.habits.awesome-posts.com/)
 
 ## 🚀 Features
 
@@ -260,6 +260,11 @@ docker-compose up -d
 npm run build
 npm run start:prod
 ```
+
+## 📝 A Note on Future Improvements
+
+> [!NOTE]
+> Given more time, I would have implemented a scheduled Lambda triggered by EventBridge to automatically reset streaks and update the daily completion state for each user, taking time zone differences into account.
 
 ## 🔍 Troubleshooting
 
